@@ -1,1 +1,1 @@
-web: gunicorn proyectoSEEP.proyectoSEEP.wsgi:application --log-file -
+web: gunicorn proyectoSEEP.wsgi --log-file -
