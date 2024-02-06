@@ -1,0 +1,1 @@
+web: gunicorn proyectoSEEP.proyectoSEEP.wsgi:application --log-file -
