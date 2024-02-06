@@ -48,7 +48,8 @@ LOCAL_APPS = (
 THIRD_PARTY_APPS = (
     'rest_framework',
     'django_filters',
-    'corsheaders'
+    'corsheaders',
+    'drf_spectacular'
 
 )
 
@@ -159,3 +160,8 @@ STATICFILES_DIRS = (
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
+
+REST_FRAMEWORK = {
+    'DEFAULT_SCHEMA_CLASS': 'drf_spectacular.openapi.AutoSchema',
+    'DEFAULT_AUTHENTICATION_CLASSES': [],
+}
