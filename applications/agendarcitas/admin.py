@@ -1,5 +1,5 @@
 from django.contrib import admin
 
-from .models import Visita
+from applications.agendarcitas.models.visita import Visita
 
 admin.site.register(Visita)

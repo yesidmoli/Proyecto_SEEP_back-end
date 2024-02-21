@@ -1,7 +1,7 @@
 from django.urls import path, include
 from rest_framework.routers import DefaultRouter
 
-from .views import VisitCreate, VisitList, VisitViewSet
+from ..agendarcitas.views.VisitaViews import VisitCreate, VisitList, VisitViewSet
 
 # Configura el enrutador para las vistas del modelo
 router = DefaultRouter()

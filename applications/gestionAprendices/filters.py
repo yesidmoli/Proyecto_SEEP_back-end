@@ -1,5 +1,5 @@
 import django_filters
-from .models import Aprendiz
+from .models.models import Aprendiz
 
 class AprendizFilter(django_filters.FilterSet):
     numero_ficha = django_filters.CharFilter(field_name='ficha__numero_ficha')

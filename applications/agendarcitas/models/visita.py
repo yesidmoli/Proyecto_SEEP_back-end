@@ -1,6 +1,6 @@
 
 from django.db import models
-from applications.gestionAprendices.models import Aprendiz, InstructorEncargado
+from applications.gestionAprendices.models.models import Aprendiz, InstructorEncargado
 
 class Visita(models.Model):
     TIPOS_DE_VISITA = (
@@ -27,7 +27,7 @@ class Visita(models.Model):
     lugar = models.CharField(max_length=255)
     numero_visita = models.IntegerField(choices=NUMERO_DE_VISITA_CHOICES)
     estado = models.CharField(max_length=20, choices=ESTADOS_DE_VISITA)
-    aprendiz = models.ForeignKey(Aprendiz, on_delete=models.CASCADE)
+    aprendiz = models.ForeignKey(Aprendiz, related_name="visita",on_delete=models.CASCADE)
     instructor_encargado = models.ForeignKey(InstructorEncargado, on_delete=models.CASCADE)
     observaciones = models.TextField(blank=True, null=True, verbose_name='Observaciones')
 

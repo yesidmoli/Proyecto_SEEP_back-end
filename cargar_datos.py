@@ -1,6 +1,6 @@
 import json
 from datetime import datetime
-from applications.gestionAprendices.models import Empresa, Ficha, Aprendiz, InstructorEncargado
+from applications.gestionAprendices.models.models import Empresa, Ficha, Aprendiz, InstructorEncargado
 
 # Cargar datos desde el archivo JSON
 with open('datos_falsos.json', 'r') as file:

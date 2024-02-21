@@ -3,6 +3,10 @@ from rest_framework import viewsets, status
 
 from django.utils import timezone
 
+from users.models import User,  IsInstructor
+from rest_framework.decorators import permission_classes
+from rest_framework.permissions import IsAuthenticated
+from rest_framework import authentication
 from rest_framework.response import Response
 
 from rest_framework.generics import (
@@ -12,14 +16,14 @@ from rest_framework.generics import (
     CreateAPIView)
 
 
-from .serializers import VisitSerializer
+from ..serializers.serializers import VisitSerializer, NumeroVisitaAprendizSerializer
 
-from .models import Visita
+from ..models.visita import Visita, InstructorEncargado, Aprendiz
 
 
 class VisitCreate(CreateAPIView):
 
-    serializer_class = VisitSerializer
+    serializer_class = NumeroVisitaAprendizSerializer
     queryset = Visita.objects.all()
 
 
@@ -31,7 +35,39 @@ class VisitList(ListCreateAPIView):
 
 class VisitViewSet(viewsets.ModelViewSet):
     queryset = Visita.objects.all()
-    serializer_class = VisitSerializer
+    serializer_class = NumeroVisitaAprendizSerializer
+    authentication_classes = [authentication.TokenAuthentication]
+    permission_classes = [IsAuthenticated]
+
+    def list(self, request):
+
+        usuario = request.user
+        print("este el el rol", usuario.rol)
+
+        try:
+            
+            #visitas que le corresponden segun el rol
+            if usuario.rol == 'instructor':
+                try:
+                    instructor_encargado = InstructorEncargado.objects.get(user=usuario)
+                    visitas_correspondientes = Visita.objects.filter(instructor_encargado=instructor_encargado)
+                    serializer = VisitSerializer(visitas_correspondientes, many=True)
+                    return Response(serializer.data)
+                except InstructorEncargado.DoesNotExist:
+                    return Response({"detail": "Perfil de instructor no encontrado"}, status=404)
+            
+            elif usuario.rol =='aprendiz':
+
+                try:
+                    aprendiz = Aprendiz.objects.get(user=usuario)
+                    visitas_correspondientes = Visita.objects.filter(aprendiz=aprendiz)
+                    serializer = VisitSerializer(visitas_correspondientes, many=True)
+                    return Response(serializer.data)
+                except Aprendiz.DoesNotExist:
+                    return Response({"detail": "Perfil de aprendiz no encontrado"}, status=404)
+
+        except InstructorEncargado.DoesNotExist:
+             return Response({"detail": "Perfil  no encontrado"}, status=404)
 
     # def create(self, request, *args, **kwargs):
     #     return Response(status=status.HTTP_405_METHOD_NOT_ALLOWED)

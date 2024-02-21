@@ -1,6 +1,6 @@
 import random
 from faker import Faker
-from applications.gestionAprendices.models import Empresa, Ficha, Aprendiz, InstructorEncargado
+from applications.gestionAprendices.models.models import Empresa, Ficha, Aprendiz, InstructorEncargado
 from django.db.utils import IntegrityError
 
 fake = Faker()

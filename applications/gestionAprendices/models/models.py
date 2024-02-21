@@ -1,15 +1,17 @@
 from django.db import models
 from django.core.exceptions import ValidationError
 from django.core.validators import FileExtensionValidator
+from users.models import User
 
 class InstructorEncargado(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
     nombres = models.CharField(max_length=100)
     apellidos = models.CharField(max_length=100)
     numero_documento = models.CharField(max_length=20)
     correo = models.EmailField()
     telefono = models.CharField(max_length=20)
 
-    ficha = models.ForeignKey('Ficha', on_delete=models.CASCADE)
+    ficha = models.ManyToManyField('Ficha' ,related_name="instructores")
 
 
     class Meta:
@@ -34,11 +36,11 @@ class Ficha(models.Model):
         ('Diurna', 'Diurna'),
     )
 
-    numero_ficha = models.CharField(max_length=20, )
+    numero_ficha = models.CharField(max_length=20 )
     nombre_programa = models.CharField(max_length=100)
     nivel_formacion = models.CharField(max_length=50, choices=NIVEL_FORMACION_CHOICES)
     horario_formacion = models.CharField(max_length=50, choices=HORARIO_FORMACION_CHOICES)
-    cantidad_aprendices = models.PositiveIntegerField()
+   
 
     
 
@@ -53,6 +55,7 @@ class Ficha(models.Model):
 
 class Aprendiz(models.Model):
 
+    user = models.OneToOneField(User, on_delete=models.CASCADE, blank=True, null=True)
     ESTADO_APROBACION_CHOICES = (
         ('aprobado', 'Aprobado'),
         ('no_aprobado', 'No aprobado'),
@@ -104,19 +107,19 @@ class Aprendiz(models.Model):
     
 
 class Empresa(models.Model):
-    nit = models.CharField(max_length=20)
-    razon_social = models.CharField(max_length=100)
-    nombre_jefe_inmediato = models.CharField(max_length=100)
-    correo = models.EmailField()
-    telefono = models.CharField(max_length=20)
-    #DIRECCION
+    nit = models.CharField(max_length=20, blank=True)
+    razon_social = models.CharField(max_length=100, blank=True)
+    nombre_jefe_inmediato = models.CharField(max_length=100, blank=True)
+    correo = models.EmailField(blank=True)
+    telefono = models.CharField(max_length=20, blank=True)
+    direccion = models.CharField(max_length=255, blank= True)
 
     class Meta:
         verbose_name = "Empresa"
         verbose_name_plural = "Empresas"
 
     def __str__(self):
-        return self.razon_social
+        return f'{self.id}'
     
 class DocumentacionAprendiz(models.Model):
     # Relación con el aprendiz
@@ -136,3 +139,18 @@ class DocumentacionAprendiz(models.Model):
     def __str__(self):
         return f'Documentación de {self.aprendiz}'
 
+
+class Documentos(models.Model):
+    
+    tipo_documento = models.CharField(max_length=30)
+    archivo = models.FileField(upload_to='documentos/', validators=[FileExtensionValidator(allowed_extensions=['pdf'])])
+    is_bitacora = models.BooleanField(default = False, blank = True, null = True)
+    aprendiz = models.ForeignKey(Aprendiz, on_delete=models.CASCADE, related_name='documentos')
+
+
+
+    class Meta:
+        verbose_name = "Documento"
+        verbose_name_plural = "Documentos"
+    def __str__(self):
+        return f'{self.tipo_documento} - {self.aprendiz}'

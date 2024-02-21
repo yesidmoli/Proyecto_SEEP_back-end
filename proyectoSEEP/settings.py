@@ -38,11 +38,12 @@ DJANGO_APPS = (
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'rest_framework.authtoken',
 )
 
 LOCAL_APPS = (
    'applications.agendarcitas',
-   'applications.users',
+   'users',
    'applications.gestionAprendices'
 )
 THIRD_PARTY_APPS = (
@@ -165,3 +166,4 @@ REST_FRAMEWORK = {
     'DEFAULT_SCHEMA_CLASS': 'drf_spectacular.openapi.AutoSchema',
     'DEFAULT_AUTHENTICATION_CLASSES': [],
 }
+AUTH_USER_MODEL = 'users.User'

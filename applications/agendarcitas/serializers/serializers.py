@@ -3,14 +3,17 @@ from rest_framework import serializers, pagination
 
 from rest_framework.exceptions import ValidationError
 
-from .models import Visita
+from applications.agendarcitas.models.visita import Visita
+from applications.gestionAprendices.serializers.AprendizSerializer import PerfilAprendiz
 
 from datetime import date
 
-
+# from ...gestionAprendices.serializers.serializers import AprendizBasicSerializer
 
 class VisitSerializer(serializers.ModelSerializer):
-
+    # aprendiz = AprendizBasicSerializer ()
+    aprendiz_datos = PerfilAprendiz(source='aprendiz', read_only=True)
+    
     motivo_cancelacion = serializers.CharField(
         allow_blank=True, required=False, write_only=True,
         help_text='Motivo de la cancelación de la visita.'
@@ -18,14 +21,28 @@ class VisitSerializer(serializers.ModelSerializer):
     fecha_cancelacion = serializers.DateTimeField(
         read_only=True
     )
+    
     class Meta:
 
         model = Visita
         fields = ('__all__')
         
 
+class NumeroVisitaAprendizSerializer(serializers.ModelSerializer):
+    # motivo_cancelacion = serializers.CharField(
+    #     allow_blank=True, required=False, write_only=True,
+    #     help_text='Motivo de la cancelación de la visita.'
+    # )
+    # fecha_cancelacion = serializers.DateTimeField(
+    #     read_only=True
+    # )
 
-    
+
+    class Meta:
+        model = Visita
+        fields = '__all__'   
+
+ 
 
 #validaciones
     def validate(self, data):
@@ -56,7 +73,7 @@ class VisitSerializer(serializers.ModelSerializer):
         if estado == 'programada':
             # Verifica si ya se programó una visita
             if visitas_programadas.exists():
-                raise ValidationError(f'Ya tienes una visita programada de número {numero_visita}.')
+                raise ValidationError(f'El aprendiz ya  tiene una visita programada de número {numero_visita}.')
             
             # Verifica que no se exceda el límite de 3 visitas de un mismo número
             if visitas_programadas.count() >= 1:
@@ -84,7 +101,8 @@ class VisitSerializer(serializers.ModelSerializer):
         return data
 
 
-
-
-
-
+class AprendizVisitSerializer(serializers.ModelSerializer):
+    
+    class Meta:
+        model = Visita
+        fields = ('id','numero_visita')
