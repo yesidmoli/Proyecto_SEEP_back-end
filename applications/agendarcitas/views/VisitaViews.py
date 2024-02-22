@@ -82,20 +82,25 @@ class VisitViewSet(viewsets.ModelViewSet):
 
      # Método personalizado para cancelar una visita
     def cancelar_visita(self, request, pk):
-        try:
-            visita = Visita.objects.get(pk=pk)
-            if visita.estado == 'programada':
-                motivo_cancelacion = request.data.get('motivo_cancelacion', '')
-                visita.estado = 'cancelada'
-                visita.motivo_cancelacion = motivo_cancelacion  # Asigna el motivo de cancelación
-                visita.fecha_cancelacion = timezone.now()
-                visita.save()
-                return Response({"detail": "Visita cancelada con éxito."}, status=status.HTTP_200_OK)
-            else:
-                return Response({"error": "No se puede cancelar una visita que no está programada."}, status=status.HTTP_400_BAD_REQUEST)
-        except Visita.DoesNotExist:
-            return Response({"error": "La visita no existe."}, status=status.HTTP_404_NOT_FOUND)
-        
+
+        rol = request.user
+
+        if rol.rol == 'instructor':
+            try:
+                visita = Visita.objects.get(pk=pk)
+                if visita.estado == 'programada':
+                    motivo_cancelacion = request.data.get('motivo_cancelacion', '')
+                    visita.estado = 'cancelada'
+                    visita.motivo_cancelacion = motivo_cancelacion  # Asigna el motivo de cancelación
+                    visita.fecha_cancelacion = timezone.now()
+                    visita.save()
+                    return Response({"detail": "Visita cancelada con éxito."}, status=status.HTTP_200_OK)
+                else:
+                    return Response({"error": "No se puede cancelar una visita que no está programada."}, status=status.HTTP_400_BAD_REQUEST)
+            except Visita.DoesNotExist:
+                return Response({"error": "La visita no existe."}, status=status.HTTP_404_NOT_FOUND)
+        else:
+            return Response({"error": "Usted no tiene permisos para cancelar una visita"}, status=status.HTTP_400_BAD_REQUEST)
         
     def marcar_realizada(self, request, pk=None):
         visita = self.get_object()
