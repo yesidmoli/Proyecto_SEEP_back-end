@@ -50,7 +50,7 @@ class Ficha(models.Model):
     
 
     def __str__(self):
-        return  self.numero_ficha 
+        return  f'{self.numero_ficha } - {self.id}'
 
 
 class Aprendiz(models.Model):
