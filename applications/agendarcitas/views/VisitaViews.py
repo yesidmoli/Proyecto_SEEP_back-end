@@ -50,7 +50,7 @@ class VisitViewSet(viewsets.ModelViewSet):
             if usuario.rol == 'instructor':
                 try:
                     instructor_encargado = InstructorEncargado.objects.get(user=usuario)
-                    visitas_correspondientes = Visita.objects.filter(instructor_encargado=instructor_encargado)
+                    visitas_correspondientes = Visita.objects.filter(instructor_encargado=instructor_encargado , estado = 'programada')
                     serializer = VisitSerializer(visitas_correspondientes, many=True)
                     return Response(serializer.data)
                 except InstructorEncargado.DoesNotExist:
@@ -60,7 +60,7 @@ class VisitViewSet(viewsets.ModelViewSet):
 
                 try:
                     aprendiz = Aprendiz.objects.get(user=usuario)
-                    visitas_correspondientes = Visita.objects.filter(aprendiz=aprendiz)
+                    visitas_correspondientes = Visita.objects.filter(aprendiz=aprendiz, estado = 'programada')
                     serializer = VisitSerializer(visitas_correspondientes, many=True)
                     return Response(serializer.data)
                 except Aprendiz.DoesNotExist:
