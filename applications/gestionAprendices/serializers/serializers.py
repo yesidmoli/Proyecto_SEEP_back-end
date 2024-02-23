@@ -45,6 +45,7 @@ class AprendizSerializer(serializers.ModelSerializer):
     visitas = serializers.SerializerMethodField()
     empresa = EmpresaSerializer() 
     ficha = FichaSerializer(read_only=True)
+    numero_ficha = serializers.IntegerField(write_only=True)  # Campo para ingresar el número de ficha
    
 
     # user = UserSerializer(required=False)
@@ -53,16 +54,13 @@ class AprendizSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 
-    def validate_numero_ficha(self, value):
-        try:
-            ficha = Ficha.objects.get(numero_ficha=value)
-            
-        except Ficha.DoesNotExist:
-            # Si la ficha no existe, lanzar una excepción de validación
-            raise serializers.ValidationError("El número de ficha no existe")
+    # def validate_numero_ficha(self, value):
+    #     try:
+    #         ficha = Ficha.objects.get(numero_ficha=value)
+    #     except Ficha.DoesNotExist:
+    #         raise serializers.ValidationError("El número de ficha no existe")
         
-        # Si la ficha existe, devolver el id de la ficha 
-        return ficha.id
+    #     return ficha
     
     def get_visitas(self, obj):
         visitas_del_aprendiz = Visita.objects.filter(aprendiz=obj)  # Obtener las visitas del aprendiz
@@ -71,6 +69,7 @@ class AprendizSerializer(serializers.ModelSerializer):
 
     def create(self, validated_data):
 
+        print(validated_data)
         empresa_data = validated_data.pop('empresa')  # Extraer datos de la empresa
         nit = empresa_data.get('nit')
         # Verificar si la empresa ya existe
@@ -79,15 +78,17 @@ class AprendizSerializer(serializers.ModelSerializer):
         # Asignar la empresa al aprendiz usando la instancia de la empresa
         validated_data['empresa'] = empresa
 
-        #llamamos a la funcion para obtener el id de la ficha y asignarlo
-
-        # Validar y obtener el número de ficha
         numero_ficha = validated_data.pop('numero_ficha')
 
-        #mandamos el numero de ficha a la funcion
-        id_ficha = self.validate_numero_ficha(numero_ficha)
+        # Obtener la instancia de Ficha correspondiente al número de ficha
+        try:
+            ficha = Ficha.objects.get(numero_ficha=numero_ficha)
+        except Ficha.DoesNotExist:
+            raise serializers.ValidationError("El número de ficha no existe")
 
-        validated_data['ficha'] = id_ficha
+        # Asignar la ficha al aprendiz usando la instancia de Ficha
+        validated_data['ficha'] = ficha
+       
         
         # Crea el Aprendiz asociado al usuario creado
         aprendiz = Aprendiz.objects.create(**validated_data)
