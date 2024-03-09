@@ -88,7 +88,7 @@ class Aprendiz(models.Model):
     
     # Otras características
     finalizacion_etapa_lectiva = models.DateField()
-    estado_aprobacion = models.CharField(max_length=50, choices=ESTADO_APROBACION_CHOICES)
+    estado_aprobacion = models.CharField(max_length=50, choices=ESTADO_APROBACION_CHOICES, default="pendiente", blank=True)
     
     # Relación con la tabla Empresa (ForeignKey)
     empresa = models.ForeignKey('Empresa', on_delete=models.CASCADE)
@@ -113,6 +113,7 @@ class Empresa(models.Model):
     correo = models.EmailField(blank=True)
     telefono = models.CharField(max_length=20, blank=True)
     direccion = models.CharField(max_length=255, blank= True)
+    cargo = models.CharField(max_length=100, blank= True)
 
     class Meta:
         verbose_name = "Empresa"
@@ -145,6 +146,7 @@ class Documentos(models.Model):
     tipo_documento = models.CharField(max_length=30)
     archivo = models.FileField(upload_to='documentos/', validators=[FileExtensionValidator(allowed_extensions=['pdf'])])
     is_bitacora = models.BooleanField(default = False, blank = True, null = True)
+    is_bitacora_check = models.BooleanField(default = False, blank = True, null = True)
     aprendiz = models.ForeignKey(Aprendiz, on_delete=models.CASCADE, related_name='documentos')
 
 

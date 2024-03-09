@@ -8,6 +8,9 @@ from applications.gestionAprendices.serializers.AprendizSerializer import Perfil
 
 from datetime import date
 
+from datetime import datetime
+from django.utils import timezone
+
 # from ...gestionAprendices.serializers.serializers import AprendizBasicSerializer
 
 class VisitSerializer(serializers.ModelSerializer):
@@ -54,9 +57,16 @@ class NumeroVisitaAprendizSerializer(serializers.ModelSerializer):
         # Obtemos la fecha actual
         fecha_actual = date.today()
 
-        # Verifica si la fecha de la visita es una fecha futura
+        # Obtener la hora actual
+        hora_actual = datetime.now().time()
+        print("esta es la hora actual aca" , hora_actual)
+
+        # Verifica si la fecha o hora de la visita es una fecha futura
         if fecha_visita < fecha_actual:
             raise ValidationError('No se pueden programar visitas en fechas pasadas.')
+        elif hora_visita < hora_actual :
+             raise ValidationError('No se pueden programar visitas en horas pasadas.')
+
 
 
 
@@ -92,7 +102,7 @@ class NumeroVisitaAprendizSerializer(serializers.ModelSerializer):
                             
 
         # Verifica si ya existe una visita con la misma fecha pero hora diferente
-        visitas_existente = Visita.objects.filter(fecha_visita=fecha_visita)
+        visitas_existente = Visita.objects.filter(fecha_visita=fecha_visita, estado="programada")
 
         for visita in visitas_existente:
             if visita.hora_visita == hora_visita:

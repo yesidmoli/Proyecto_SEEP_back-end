@@ -44,7 +44,8 @@ DJANGO_APPS = (
 LOCAL_APPS = (
    'applications.agendarcitas',
    'users',
-   'applications.gestionAprendices'
+   'applications.gestionAprendices',
+   'applications.formatos'
 )
 THIRD_PARTY_APPS = (
     'rest_framework',
@@ -129,11 +130,13 @@ AUTH_PASSWORD_VALIDATORS = [
 
 LANGUAGE_CODE = 'es'
 
-TIME_ZONE = 'UTC'
+# TIME_ZONE = 'UTC'
+TIME_ZONE = 'America/Bogota'
+
 
 USE_I18N = True
 
-USE_TZ = True
+USE_TZ = False
 
 
 # Static files (CSS, JavaScript, Images)

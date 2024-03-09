@@ -22,6 +22,15 @@ class ListarFichas(serializers.ModelSerializer):
 
         # )
 
+    def create(self, validated_data):
+        numero_ficha = validated_data.get('numero_ficha')
+
+        # Verificar si ya existe una ficha con el número proporcionado
+        if Ficha.objects.filter(numero_ficha=numero_ficha).exists():
+            raise serializers.ValidationError("Ya existe una ficha con este número de ficha.")
+
+        return super().create(validated_data)
+
 
 #serializador para el modelo empresa
 class EmpresaSerializer(serializers.ModelSerializer):
