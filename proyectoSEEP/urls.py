@@ -9,7 +9,7 @@ urlpatterns = [
     re_path('', include('applications.agendarcitas.urls')),
     re_path('', include('applications.formatos.urls')),
     re_path('', include('users.urls')),
-    
+   
     path('api/schema/', SpectacularAPIView.as_view(), name='schema'),
     path('api/docs/', SpectacularSwaggerView.as_view(url_name='schema'), name='docs'),
 

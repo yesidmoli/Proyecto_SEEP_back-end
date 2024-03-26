@@ -5,6 +5,12 @@ from applications.gestionAprendices.models.models import InstructorEncargado, Ap
 from applications.gestionAprendices.serializers.InstructoSerializer import InstructorSerializer
 from applications.gestionAprendices.serializers.AprendizSerializer import PerfilAprendiz
 from rest_framework.response import Response
+
+from django.contrib.auth.forms import PasswordResetForm
+from dj_rest_auth.serializers import PasswordResetSerializer
+
+from .forms import CustomResetForm
+
 class UserSerializer(serializers.ModelSerializer):
 
     class Meta:
@@ -82,3 +88,9 @@ class AuthTokenSerializer(serializers.Serializer):
 
     def create(self, validated_data):
         raise NotImplementedError('`create()` method is not implemented')
+    
+
+class CustomPasswordResetSerializer(PasswordResetSerializer):
+    @property
+    def password_reset_form_class(self):
+        return CustomResetForm

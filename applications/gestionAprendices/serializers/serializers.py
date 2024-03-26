@@ -6,7 +6,9 @@ from django.contrib.auth import get_user_model
 from ..models.models import Ficha, Aprendiz, DocumentacionAprendiz, Documentos, Empresa
 from ...agendarcitas.serializers.serializers import NumeroVisitaAprendizSerializer, AprendizVisitSerializer
 
-
+from django.core.mail import send_mail
+from django.template.loader import render_to_string
+from ..tasks import send_welcome_email
 
 from ...agendarcitas.models.visita import Visita
 
@@ -110,7 +112,8 @@ class AprendizSerializer(serializers.ModelSerializer):
             'rol': 'aprendiz',
             'documento': validated_data['numero_documento'],  # Utiliza el número de documento como nombre de usuario
             'password': default_password,  # Utiliza una contraseña por defecto
-            'name': validated_data['nombres']
+            'name': validated_data['nombres'],
+            'email': validated_data['correo_principal']
         }
 
         # Crea el usuario asociado al Aprendiz
@@ -120,7 +123,17 @@ class AprendizSerializer(serializers.ModelSerializer):
         aprendiz.user = user
         aprendiz.save()
 
-        print("Este es el final del aprendiz" ,aprendiz)
+
+       
+
+        # Llamar al método para enviar el correo electrónico
+        send_welcome_email(
+            email=validated_data['correo_principal'],
+            nombres=validated_data['nombres'],
+            numero_documento=validated_data['numero_documento'],
+            default_password=default_password,
+        )
+
 
         return aprendiz
 

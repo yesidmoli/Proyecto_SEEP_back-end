@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bienvenido al Sistema SEEP</title>
+</head>
+<body>
+    <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
+        <h2 style="color: #007bff;">¡Bienvenido al Sistema SEEP!</h2>
+        <p>Hola {{ nombres }},</p>
+        <p>Te damos la bienvenida al Sistema SEEP. Tu cuenta ha sido activada con éxito.</p>
+        <p>Tu N° Identificación es: {{ numero_documento }}</p>
+        <p>Tu contraseña temporal es: {{ default_password }}</p>
+        <p>Por favor, inicia sesión en el sistema utilizando estos datos y recuerda cambiar tu contraseña después de iniciar sesión.</p>
+        <p>Puedes acceder al sistema desde la siguiente página de bienvenida: <a href="{{ welcome_page_url }}">Página de Bienvenida</a></p>
+        <p>O también puedes restablecer tu contraseña desde el siguiente enlace: <a href="{{ reset_password_url }}">Restablecer Contraseña</a></p>
+        <p>¡Gracias y bienvenido!</p>
+    </div>
+</body>
+</html>

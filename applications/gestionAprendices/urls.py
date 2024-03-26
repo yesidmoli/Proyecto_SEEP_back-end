@@ -13,6 +13,8 @@ from .views.views import (FichaListView,
                           )
 
 from .views.InstructorView import InstructorViewSet, ListaFichasCargo, AprendicesInstructorEcargado
+
+from .views.emailprueba import enviar_correo
 app_name = 'aprendices_app'
 
 router = DefaultRouter()
@@ -26,6 +28,7 @@ urlpatterns = [
     path('api/fichas-instructor/', ListaFichasCargo.as_view(), name='ficha-list'),
     path('api/aprendices-instructor/', AprendicesInstructorEcargado.as_view(), name='Aprendices de un Instructor'),
     path('api/bitacoras-aprendiz/update_checks/', UpdateBitacoraCheck.as_view(), name='update_bitacora_check'),
+    path('api/enviar-correo/', enviar_correo, name='correo'),
     # path('api/aprendices/', AprendizListView.as_view(), name='aprendices-list'),
 ]
 # Configuración de archivos estáticos y multimedia para desarrollo
