@@ -20,25 +20,27 @@ from ..serializers.serializers import VisitSerializer, NumeroVisitaAprendizSeria
 
 from ..models.visita import Visita, InstructorEncargado, Aprendiz
 
-
+#vista para la creacion de visita, heredando de la vista createApiView
 class VisitCreate(CreateAPIView):
 
     serializer_class = NumeroVisitaAprendizSerializer
     queryset = Visita.objects.all()
 
-
+#vista para listar las visitas
 class VisitList(ListCreateAPIView):
 
     serializer_class = VisitSerializer
     queryset = Visita.objects.all()
 
 
+#vista para aplicarle el crud a la visita, heredando de viewset
 class VisitViewSet(viewsets.ModelViewSet):
     queryset = Visita.objects.all()
     serializer_class = NumeroVisitaAprendizSerializer
     authentication_classes = [authentication.TokenAuthentication]
     permission_classes = [IsAuthenticated]
 
+    #modificamos el metodo de listar, para listar segun el rol, las visitas
     def list(self, request):
 
         usuario = request.user
@@ -101,7 +103,8 @@ class VisitViewSet(viewsets.ModelViewSet):
                 return Response({"error": "La visita no existe."}, status=status.HTTP_404_NOT_FOUND)
         else:
             return Response({"error": "Usted no tiene permisos para cancelar una visita"}, status=status.HTTP_400_BAD_REQUEST)
-        
+
+    #metodo para marcar una visita como realizada
     def marcar_realizada(self, request, pk=None):
         visita = self.get_object()
         if visita.estado == 'programada':

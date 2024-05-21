@@ -13,6 +13,7 @@ from django.utils import timezone
 
 # from ...gestionAprendices.serializers.serializers import AprendizBasicSerializer
 
+#serializador para serializar las visitas, compartiendo los datos del aprendiz y los campos de cancelacion
 class VisitSerializer(serializers.ModelSerializer):
     # aprendiz = AprendizBasicSerializer ()
     aprendiz_datos = PerfilAprendiz(source='aprendiz', read_only=True)
@@ -31,6 +32,7 @@ class VisitSerializer(serializers.ModelSerializer):
         fields = ('__all__')
         
 
+#serializador para devolver 
 class NumeroVisitaAprendizSerializer(serializers.ModelSerializer):
     # motivo_cancelacion = serializers.CharField(
     #     allow_blank=True, required=False, write_only=True,
@@ -64,8 +66,24 @@ class NumeroVisitaAprendizSerializer(serializers.ModelSerializer):
         # Verifica si la fecha o hora de la visita es una fecha futura
         if fecha_visita < fecha_actual:
             raise ValidationError('No se pueden programar visitas en fechas pasadas.')
-        elif hora_visita < hora_actual :
+        elif fecha_visita == fecha_actual and hora_visita < hora_actual:
              raise ValidationError('No se pueden programar visitas en horas pasadas.')
+         
+        # Obtener la fecha y hora actual
+        # fecha_actual = date.today()
+        # hora_actual = datetime.now().time()
+
+        # # Obtener la fecha y hora de la visita
+        # fecha_visita = data.get('fecha_visita')
+        # hora_visita = data.get('hora_visita')
+
+        # # Verificar si la fecha de visita es una fecha futura
+        # if fecha_visita < fecha_actual:
+        #     raise ValidationError('No se pueden programar visitas en fechas pasadas.')
+
+        # # Verificar si la hora de visita es una hora futura en la fecha de hoy
+        # if fecha_visita == fecha_actual and hora_visita < hora_actual:
+        #     raise ValidationError('No se pueden programar visitas en horas pasadas.')
 
 
 
@@ -111,6 +129,7 @@ class NumeroVisitaAprendizSerializer(serializers.ModelSerializer):
         return data
 
 
+#serializador para solo devolver el id y numero de visita del aprendiz
 class AprendizVisitSerializer(serializers.ModelSerializer):
     
     class Meta:

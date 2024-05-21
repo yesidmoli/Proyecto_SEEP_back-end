@@ -117,18 +117,22 @@ class UpdateBitacoraCheck(APIView):
     def put(self, request, *args, **kwargs):
         aprendiz_id = request.query_params.get('aprendiz_id')
         documentos_actualizados = request.data.get('documentos', [])
+        
 
         if aprendiz_id and documentos_actualizados:
             for documento in documentos_actualizados:
                 documento_id = documento.get('id')
+                observacion = documento.get('observaciones')
 
-                print("documento id" , documento_id)
+                print("observacion id" , observacion)
+                
                 is_bitacora_check = documento.get('is_bitacora_check')
 
                 # Obtener el documento y actualizar el check
                 try:
                     doc = Documentos.objects.get(pk=documento_id, aprendiz=aprendiz_id)
                     doc.is_bitacora_check = is_bitacora_check
+                    doc.observaciones = observacion
                     doc.save()
                 except Documentos.DoesNotExist:
                     return Response({"error": f"Documento con id {documento_id} no encontrado para el aprendiz con id {aprendiz_id}"}, status=status.HTTP_404_NOT_FOUND)

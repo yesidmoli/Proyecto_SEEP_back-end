@@ -2,7 +2,28 @@
 from django.db import models
 from applications.gestionAprendices.models.models import Aprendiz, InstructorEncargado
 
+#modelo para el agendamiento de visitas
 class Visita(models.Model):
+    """
+    Represents a visit made by an apprentice to an instructor.
+
+    Attributes:
+        TIPOS_DE_VISITA (tuple): Choices for the type of visit.
+        ESTADOS_DE_VISITA (tuple): Choices for the state of the visit.
+        NUMERO_DE_VISITA_CHOICES (tuple): Choices for the visit number.
+        fecha_visita (DateField): The date of the visit.
+        hora_visita (TimeField): The time of the visit.
+        tipo_visita (CharField): The type of visit.
+        lugar (CharField): The location of the visit.
+        numero_visita (IntegerField): The number of the visit.
+        estado (CharField): The state of the visit.
+        aprendiz (ForeignKey): The apprentice associated with the visit.
+        instructor_encargado (ForeignKey): The instructor in charge of the visit.
+        observaciones (TextField): Additional observations for the visit.
+        motivo_cancelacion (TextField): The reason for canceling the visit.
+        fecha_cancelacion (DateTimeField): The date and time of the cancellation.
+    """
+
     TIPOS_DE_VISITA = (
         ('presencial', 'Visita Presencial'),
         ('virtual', 'Visita Virtual'),
@@ -12,7 +33,6 @@ class Visita(models.Model):
         ('programada', 'Programada'),
         ('realizada', 'Realizada'),
         ('cancelada', 'Cancelada'),
-        
     )
 
     NUMERO_DE_VISITA_CHOICES = (
@@ -31,9 +51,6 @@ class Visita(models.Model):
     instructor_encargado = models.ForeignKey(InstructorEncargado, on_delete=models.CASCADE)
     observaciones = models.TextField(blank=True, null=True, verbose_name='Observaciones')
 
-
-
-    # Campos adicionales para el registro de visitas canceladas
     motivo_cancelacion = models.TextField(blank=True, null=True)
     fecha_cancelacion = models.DateTimeField(blank=True, null=True)
    

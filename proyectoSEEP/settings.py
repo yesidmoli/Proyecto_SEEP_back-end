@@ -36,6 +36,8 @@ ALLOWED_HOSTS = ['*']
 # Application definition
 
 DJANGO_APPS = (
+    'jet.dashboard',
+    'jet',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -60,7 +62,7 @@ THIRD_PARTY_APPS = (
     'drf_spectacular',
     'allauth',
     'allauth.account',
-    'celery',
+    'django_extensions',
 
 
 
@@ -102,10 +104,12 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                
             ],
         },
     },
 ]
+
 
 WSGI_APPLICATION = 'proyectoSEEP.wsgi.application'
 
@@ -203,3 +207,13 @@ REST_AUTH = {
     'SESSION_LOGIN': False,
     'PASSWORD_RESET_SERIALIZER': 'users.serializers.CustomPasswordResetSerializer'
 }
+
+
+
+# JET_THEMES = [
+#     {
+#         'theme': 'light-green',
+#         'color': '#04324D',
+#         'title': 'Light Violet'
+#     }
+# ]

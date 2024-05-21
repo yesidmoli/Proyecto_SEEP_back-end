@@ -162,7 +162,7 @@ class DocumentacionSerializer(serializers.ModelSerializer):
 
 
 class AprendizPagination(pagination.PageNumberPagination):
-    page_size = 5
+    page_size = 25
     max_page_size = 50
 
 class FichaPagination(pagination.PageNumberPagination):

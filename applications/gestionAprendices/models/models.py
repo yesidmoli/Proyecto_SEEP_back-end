@@ -120,7 +120,7 @@ class Empresa(models.Model):
         verbose_name_plural = "Empresas"
 
     def __str__(self):
-        return f'{self.id}'
+        return f'{self.razon_social}'
     
 class DocumentacionAprendiz(models.Model):
     # Relación con el aprendiz
@@ -141,12 +141,14 @@ class DocumentacionAprendiz(models.Model):
         return f'Documentación de {self.aprendiz}'
 
 
+#modelo para guardar cada documento como una instancia
 class Documentos(models.Model):
     
     tipo_documento = models.CharField(max_length=30)
     archivo = models.FileField(upload_to='documentos/', validators=[FileExtensionValidator(allowed_extensions=['pdf'])])
     is_bitacora = models.BooleanField(default = False, blank = True, null = True)
     is_bitacora_check = models.BooleanField(default = False, blank = True, null = True)
+    observaciones = models.CharField(max_length=255 , blank = True, null = True)
     aprendiz = models.ForeignKey(Aprendiz, on_delete=models.CASCADE, related_name='documentos')
 
 

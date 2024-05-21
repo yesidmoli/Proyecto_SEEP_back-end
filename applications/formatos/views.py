@@ -5,6 +5,8 @@ from .models.formatoModels import FormatoPlaneacion
 from rest_framework.exceptions import NotFound
 
 from .serializers.formatoSerializer import FormatoSerializer
+
+#vista para las solicitudes que se hagan usando la vista viewset para aplicar el crud
 class FormatoViewset(viewsets.ModelViewSet):
 
     # queryset = FormatoPlaneacion.objects.all()

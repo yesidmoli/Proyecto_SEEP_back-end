@@ -1,0 +1,20 @@
+{# Template: your_app/templates/admin/base_site.html #}
+{% extends "admin/base_site.html" %}
+{% load static i18n %}
+
+{# Setup favicon #}
+{% block extrahead %}<link rel="shortcut icon" type="image/png" href="{% static 'img/sena-logo.svg' %}" style="height: 2rem;"/>{% endblock %}
+
+{# Setup browser tab label #}
+{% block title %}{{ title }} |  {% trans "SEEP || Sistema de Evaluación Etapa Productiva" %}{% endblock %}
+
+{# Setup branding #}
+{% block branding %}
+    <h1 id="site-name">
+        <a href="{% url 'admin:index' %}">
+            {# Your logo here #}
+            <img src="{% static 'img/seep-logo-verde.svg' %}" alt="seep" height="100%" width="100%">
+            
+        </a>
+    </h1>
+{% endblock %}
