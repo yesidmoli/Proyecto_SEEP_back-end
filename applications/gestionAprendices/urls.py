@@ -8,7 +8,8 @@ from .views.views import (FichaListView,
                           AprendizListView, 
                           DocumentacionAprendizViewSet, 
                           CrearFichaViewset,
-                          UpdateBitacoraCheck
+                          UpdateBitacoraCheck,
+                          FormularioFinalView
                         
                           )
 
@@ -22,6 +23,7 @@ router.register(r'documentacion-aprendiz', DocumentacionAprendizViewSet, basenam
 router.register(r'fichas', CrearFichaViewset, basename='ficha')
 router.register(r'aprendices', AprendizListView, basename='aprendices')
 router.register(r'instructor', InstructorViewSet, basename='instructor')
+router.register(r'formulario-final', FormularioFinalView, basename='formulario-final')
 urlpatterns = [
     path('api/', include(router.urls)),
     path('api/fichas-list/', FichaListView.as_view(), name='ficha-list'),

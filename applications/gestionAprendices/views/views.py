@@ -2,7 +2,7 @@ from django.shortcuts import render
 from rest_framework.generics import (ListCreateAPIView, ListAPIView, RetrieveAPIView)
 from rest_framework import viewsets
 from ..serializers.serializers import *
-from ..models.models import Aprendiz, Ficha, Documentos, InstructorEncargado
+from ..models.models import Aprendiz, Ficha, Documentos, InstructorEncargado, FormularioFinalAprendiz
 from rest_framework.reverse import reverse
 from rest_framework.response import Response
 
@@ -140,3 +140,11 @@ class UpdateBitacoraCheck(APIView):
             return Response({"message": "Checks actualizados correctamente"}, status=status.HTTP_200_OK)
         else:
             return Response({"error": "Falta el ID del aprendiz o los documentos actualizados"}, status=status.HTTP_400_BAD_REQUEST)
+        
+class FormularioFinalView(viewsets.ModelViewSet):
+    serializer_class = FormularioFinalAprendizSerializer
+    queryset = FormularioFinalAprendiz.objects.all()
+    
+    
+
+    

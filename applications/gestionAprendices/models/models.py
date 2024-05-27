@@ -28,12 +28,14 @@ class Ficha(models.Model):
     NIVEL_FORMACION_CHOICES = (
         ('Tecnico', 'Técnico'),
         ('Tecnologo', 'Tecnólogo'),
+        
   
     )
 
     HORARIO_FORMACION_CHOICES = (
         ('Mixta', 'Mixta'),
         ('Diurna', 'Diurna'),
+        
     )
 
     numero_ficha = models.CharField(max_length=20 )
@@ -158,3 +160,52 @@ class Documentos(models.Model):
         verbose_name_plural = "Documentos"
     def __str__(self):
         return f'{self.tipo_documento} - {self.aprendiz}'
+
+
+class FormularioFinalAprendiz(models.Model):
+    OPCIONES_CHOICES = (
+        ('SI', 'Si'),
+        ('NO', 'No'),
+    )
+    
+    CARGO_CHOICES = (
+        ('EMPLEADO', 'Empleado'),
+        ('INDEPENDIENTE', 'Independiente'),
+    )
+    
+    TIPO_ESTUDIO_CHOICES = (
+        ('TÉCNICO', 'Técnico'),
+        ('TECNOLÓGICO', 'Tecnológico'),
+        ('UNIVERSITARIO', 'Universitario'),
+        ('OTRO', 'Otro'),
+    )
+
+    aprendiz = models.ForeignKey(Aprendiz, on_delete=models.CASCADE, related_name='formulario_final')
+    madre_cabeza_familia = models.BooleanField(default=False , blank = True, null = True)
+    titulo_obtenido = models.CharField(max_length=100 , blank = True, null = True)
+    fecha_fin_etapa_lectiva = models.DateField()
+    cargo_funciones = models.CharField(max_length=100)
+    fecha_fin_etapa_productiva = models.DateField()
+    practica_aprendido = models.CharField(max_length=50)
+    estudios_superiores_adicionales = models.CharField(max_length=2, choices=OPCIONES_CHOICES)
+    estudios = models.CharField(max_length=100, blank=True, null=True)
+    trabaja_actualmente = models.CharField(max_length=2, choices=OPCIONES_CHOICES)
+    estado_actual = models.CharField(max_length=20)
+    cargo_actual = models.CharField(max_length=100, blank=True, null=True)
+    empresa_labora = models.CharField(max_length=100, blank=True, null=True)
+    antiguedad_trabajo = models.PositiveIntegerField(blank=True, null=True)
+    area_informacion_complementaria = models.CharField(max_length=100)
+    actualmente_estudia = models.CharField(max_length=2, choices=OPCIONES_CHOICES)
+    estudia_que = models.CharField(max_length=100, blank=True, null=True)
+    institucion_universidad = models.CharField(max_length=100, blank=True, null=True)
+    certificar_competencias_laborales = models.CharField(max_length=2, choices=OPCIONES_CHOICES)
+    conoce_beneficios_sena = models.CharField(max_length=2, choices=OPCIONES_CHOICES)
+    idea_negocio = models.CharField(max_length=2, choices=OPCIONES_CHOICES)
+    conoce_servicio_fondo_emprender = models.CharField(max_length=2, choices=OPCIONES_CHOICES)
+    necesita_empleo = models.CharField(max_length=2, choices=OPCIONES_CHOICES)
+    sugerencias_comentarios = models.TextField(blank=True, null=True)
+    
+    class Meta:
+        verbose_name = "Formulario final del aprendiz"
+        verbose_name_plural = "Formularios finales de los aprendices"
+   

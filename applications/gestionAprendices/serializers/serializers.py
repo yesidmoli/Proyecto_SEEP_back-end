@@ -3,7 +3,7 @@ from rest_framework import serializers, pagination
 from users.serializers import UserSerializer
 #importamos los modelos
 from django.contrib.auth import get_user_model
-from ..models.models import Ficha, Aprendiz, DocumentacionAprendiz, Documentos, Empresa
+from ..models.models import Ficha, Aprendiz, DocumentacionAprendiz, Documentos, Empresa, FormularioFinalAprendiz
 from ...agendarcitas.serializers.serializers import NumeroVisitaAprendizSerializer, AprendizVisitSerializer
 
 from django.core.mail import send_mail
@@ -178,3 +178,9 @@ class FichaPagination(pagination.PageNumberPagination):
 #         model = Aprendiz
 #         fields = ('nombres', 'apellidos')
     
+
+class FormularioFinalAprendizSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = FormularioFinalAprendiz
+        fields = '__all__'
+        
