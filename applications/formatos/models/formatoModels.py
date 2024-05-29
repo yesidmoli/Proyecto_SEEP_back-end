@@ -21,6 +21,7 @@ class FactorTecnico(Factor):
 
 
 class Seguimiento(models.Model):
+    aprendiz = models.ForeignKey(Aprendiz, on_delete=models.CASCADE, related_name='seguimientos')
     tipo_informe = models.CharField(max_length=50, blank= True, null = True)
     periodo_evaluado_inicio = models.DateField(blank= True, null = True)
     periodo_evaluado_final = models.DateField(blank= True, null = True)
@@ -31,6 +32,7 @@ class Seguimiento(models.Model):
 
 
 class Evaluacion(models.Model):
+    aprendiz = models.ForeignKey(Aprendiz, on_delete=models.CASCADE, related_name='evaluaciones')
     juicio_evaluacion = models.CharField(max_length=100, blank= True, null = True)
     reconocimientos_especiales = models.BooleanField(blank= True, null = True)
     reconocimientos_detalle = models.TextField( null=True, blank=True)
@@ -39,8 +41,11 @@ class Evaluacion(models.Model):
     firma_aprendiz = models.TextField(blank= True, null = True)
     nombre_instructor = models.CharField(max_length=100, blank= True, null = True)
     firma_instructor = models.TextField(blank= True, null = True)
+    ciudad = models.CharField(max_length=100 , blank= True, null=True)
+    fecha_elaboracion = models.DateField(blank= True, null = True)
 
 class Planeacion(models.Model):
+    aprendiz = models.ForeignKey(Aprendiz, on_delete=models.CASCADE, related_name='planeaciones')
     observaciones = models.TextField(null=True, blank=True)
     nombre_enteconformador = models.CharField(max_length=100, blank= True, null = True)
     firma_enteconformador = models.TextField(blank= True, null = True)
@@ -61,9 +66,9 @@ class FormatoPlaneacion(models.Model):
     ciudad = models.CharField(max_length=100 , blank= True)
     fecha_elaboracion = models.DateField(blank= True, null = True)
     aprendiz = models.ForeignKey(Aprendiz, on_delete=models.CASCADE, related_name='formatos_planeacion')
-    planeacion = models.ForeignKey(Planeacion, on_delete=models.CASCADE, related_name='formato_planeacion')
-    seguimiento = models.ForeignKey(Seguimiento, on_delete=models.CASCADE, related_name='formato_planeacion')
-    evaluacion = models.ForeignKey(Evaluacion, on_delete=models.CASCADE, related_name='formato_planeacion')
+    # planeacion = models.ForeignKey(Planeacion, on_delete=models.CASCADE, related_name='formato_planeacion', null=True, blank=True)
+    # seguimiento = models.ForeignKey(Seguimiento, on_delete=models.CASCADE, related_name='formato_planeacion', null=True, blank=True)
+    # evaluacion = models.ForeignKey(Evaluacion, on_delete=models.CASCADE, related_name='formato_planeacion', null=True, blank=True)
 
 # from django.db import models
 # from applications.gestionAprendices.models.models import Aprendiz

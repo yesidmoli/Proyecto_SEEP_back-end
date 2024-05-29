@@ -1,8 +1,8 @@
 from rest_framework import serializers
 
 from ..models.formatoModels import *
-from applications.gestionAprendices.serializers.serializers import AprendizSerializer
-
+from applications.gestionAprendices.serializers.serializers import AprendizSerializer, FichaSerializer, EmpresaSerializer
+from applications.gestionAprendices.models.models import Aprendiz, Ficha, Empresa
 
 class EvaluacionSerializer(serializers.ModelSerializer):
     class Meta:
@@ -24,13 +24,36 @@ class PlaneacionSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
     def create(self, validated_data):
-        actividades_data = validated_data.pop('actividades', [])  # Obtener las actividades o una lista vacía si no están presentes
+        actividades_data = validated_data.pop('actividades', [])
         planeacion = Planeacion.objects.create(**validated_data)
 
         for actividad_data in actividades_data:
-            Actividades.objects.create(**actividad_data)
+            # Crear la actividad asociada a la planeación
+            actividad_instance = Actividades.objects.create(**actividad_data)
+            # Agregar la actividad creada a la relación ManyToMany de la planeación
+            planeacion.actividades.add(actividad_instance)
 
         return planeacion
+
+    def update(self, instance, validated_data):
+        actividades_data = validated_data.pop('actividades', None)
+
+        # Actualizar otros campos
+        for attr, value in validated_data.items():
+            setattr(instance, attr, value)
+
+        instance.save()
+
+        # Actualizar las actividades solo si se proporcionaron nuevos datos de actividades
+        if actividades_data is not None:
+            # Limpiar las actividades actuales y agregar las nuevas
+            instance.actividades.clear()
+            for actividad_data in actividades_data:
+                actividad_instance = Actividades.objects.create(**actividad_data)
+                instance.actividades.add(actividad_instance)
+
+        return instance
+
 
 
 class FactoresActiCompSerializer(serializers.ModelSerializer):
@@ -52,7 +75,49 @@ class SeguimientoSerializer(serializers.ModelSerializer):
     class Meta:
         model = Seguimiento
         fields = '__all__'
+        
+    def create(self, validated_data):
+        factores_actitudinales_data = validated_data.pop('factores_actitudinales', [])
+        factores_tecnicos_data = validated_data.pop('factores_tecnicos', [])
+        seguimiento = Seguimiento.objects.create(**validated_data)
 
+        for factor_actitudinal_data in factores_actitudinales_data:
+            factor_actitudinal_instance = FactorActitudinal.objects.create(**factor_actitudinal_data)
+            seguimiento.factores_actitudinales.add(factor_actitudinal_instance)
+
+        for factor_tecnico_data in factores_tecnicos_data:
+            factor_tecnico_instance = FactorTecnico.objects.create(**factor_tecnico_data)
+            seguimiento.factores_tecnicos.add(factor_tecnico_instance)
+
+        return seguimiento
+
+    def update(self, instance, validated_data):
+        factores_actitudinales_data = validated_data.pop('factores_actitudinales', None)
+        factores_tecnicos_data = validated_data.pop('factores_tecnicos', None)
+
+        # Actualizar otros campos
+        for attr, value in validated_data.items():
+            setattr(instance, attr, value)
+
+        instance.save()
+
+        # Actualizar los factores actitudinales solo si se proporcionaron nuevos datos de factores actitudinales
+        if factores_actitudinales_data is not None:
+            # Limpiar los factores actitudinales actuales y agregar los nuevos
+            instance.factores_actitudinales.clear()
+            for factor_actitudinal_data in factores_actitudinales_data:
+                factor_actitudinal_instance = FactorActitudinal.objects.create(**factor_actitudinal_data)
+                instance.factores_actitudinales.add(factor_actitudinal_instance)
+
+        # Actualizar los factores técnicos solo si se proporcionaron nuevos datos de factores técnicos
+        if factores_tecnicos_data is not None:
+            # Limpiar los factores técnicos actuales y agregar los nuevos
+            instance.factores_tecnicos.clear()
+            for factor_tecnico_data in factores_tecnicos_data:
+                factor_tecnico_instance = FactorTecnico.objects.create(**factor_tecnico_data)
+                instance.factores_tecnicos.add(factor_tecnico_instance)
+
+        return instance
 
 class FormatoSerializer(serializers.ModelSerializer):
     planeacion = PlaneacionSerializer()
@@ -175,3 +240,49 @@ class FormatoSerializer(serializers.ModelSerializer):
         return instance
     
 
+
+# class FormatoPlaneacionSerializer(serializers.ModelSerializer):
+#     seguimientos = SeguimientoSerializer(many=True, read_only=True)
+#     evaluaciones = EvaluacionSerializer(many=True, read_only=True)
+#     planeaciones = PlaneacionSerializer(many=True, read_only=True)
+
+#     class Meta:
+#         model = FormatoPlaneacion
+#         fields = '__all__'
+
+
+class AprendizCompletoSerializer(serializers.ModelSerializer):
+    planeacion = serializers.SerializerMethodField()
+    seguimiento = serializers.SerializerMethodField()
+    evaluacion = serializers.SerializerMethodField()
+    ficha = serializers.SerializerMethodField()
+    empresa = serializers.SerializerMethodField()
+
+    class Meta:
+        model = Aprendiz
+        fields = '__all__'
+
+    def get_planeacion(self, obj):
+        planeacion = Planeacion.objects.filter(aprendiz=obj).first()  # Cambio aquí
+        serializer = PlaneacionSerializer(planeacion, many=False)
+        return serializer.data if planeacion else None
+
+    def get_seguimiento(self, obj):
+        seguimiento = Seguimiento.objects.filter(aprendiz=obj).first()  # Cambio aquí
+        serializer = SeguimientoSerializer(seguimiento, many=False)
+        return serializer.data if seguimiento else None
+
+    def get_evaluacion(self, obj):
+        evaluacion = Evaluacion.objects.filter(aprendiz=obj).first()  # Cambio aquí
+        serializer = EvaluacionSerializer(evaluacion, many=False)
+        return serializer.data if evaluacion else None
+    
+    def get_ficha(self, obj):
+        ficha = Ficha.objects.filter(aprendiz=obj).first()  # Cambio aquí
+        serializer = FichaSerializer(ficha, many=False)
+        return serializer.data if ficha else None
+    
+    def get_empresa(self, obj):
+        empresa = Empresa.objects.filter(aprendiz=obj).first()  # Cambio aquí
+        serializer = EmpresaSerializer(empresa, many=False)
+        return serializer.data if empresa else None
