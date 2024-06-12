@@ -137,7 +137,48 @@ class AprendizSerializer(serializers.ModelSerializer):
 
         return aprendiz
 
+    def update(self, instance, validated_data):
+        # Actualizar los campos directos del Aprendiz
+        instance.nombres = validated_data.get('nombres', instance.nombres)
+        instance.apellidos = validated_data.get('apellidos', instance.apellidos)
+        instance.tipo_documento = validated_data.get('tipo_documento', instance.tipo_documento)
+        instance.numero_documento = validated_data.get('numero_documento', instance.numero_documento)
+        instance.fecha_expedicion = validated_data.get('fecha_expedicion', instance.fecha_expedicion)
+        instance.lugar_expedicion = validated_data.get('lugar_expedicion', instance.lugar_expedicion)
+        instance.fecha_nacimiento = validated_data.get('fecha_nacimiento', instance.fecha_nacimiento)
+        instance.sexo = validated_data.get('sexo', instance.sexo)
+        instance.direccion_domicilio = validated_data.get('direccion_domicilio', instance.direccion_domicilio)
+        instance.municipio = validated_data.get('municipio', instance.municipio)
+        instance.departamento = validated_data.get('departamento', instance.departamento)
+        instance.numero_celular1 = validated_data.get('numero_celular1', instance.numero_celular1)
+        instance.numero_celular2 = validated_data.get('numero_celular2', instance.numero_celular2)
+        instance.telefono_fijo = validated_data.get('telefono_fijo', instance.telefono_fijo)
+        instance.correo_principal = validated_data.get('correo_principal', instance.correo_principal)
+        instance.correo_secundario = validated_data.get('correo_secundario', instance.correo_secundario)
+        instance.finalizacion_etapa_lectiva = validated_data.get('finalizacion_etapa_lectiva', instance.finalizacion_etapa_lectiva)
+        instance.estado_aprobacion = validated_data.get('estado_aprobacion', instance.estado_aprobacion)
 
+        # Actualizar la empresa asociada al aprendiz si se proporciona
+        empresa_data = validated_data.get('empresa')
+        if empresa_data:
+            empresa_serializer = EmpresaSerializer(instance.empresa, data=empresa_data)
+            if empresa_serializer.is_valid():
+                empresa_serializer.save()
+            else:
+                raise serializers.ValidationError(empresa_serializer.errors)
+
+        # Actualizar la ficha asociada al aprendiz si se proporciona
+        numero_ficha = validated_data.get('numero_ficha')
+        if numero_ficha:
+            try:
+                ficha = Ficha.objects.get(numero_ficha=numero_ficha)
+            except Ficha.DoesNotExist:
+                raise serializers.ValidationError("La ficha especificada no existe")
+            instance.ficha = ficha
+
+        # Guardar los cambios en el objeto Aprendiz
+        instance.save()
+        return instance
 # class PerfilAprendiz(serializers.ModelSerializer):
 
 #     class Meta:

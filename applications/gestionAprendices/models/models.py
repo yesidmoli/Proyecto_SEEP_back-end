@@ -71,7 +71,7 @@ class Aprendiz(models.Model):
     # Información personal
     nombres = models.CharField(max_length=100)
     apellidos = models.CharField(max_length=100)
-    tipo_documento = models.CharField(max_length=20, choices=TIPO_DOCUMENTO)
+    tipo_documento = models.CharField(max_length=20 )
     numero_documento = models.CharField(max_length=20, unique=True)
     fecha_expedicion = models.DateField()
     lugar_expedicion = models.CharField(max_length=100)

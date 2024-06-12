@@ -110,9 +110,9 @@ class NumeroVisitaAprendizSerializer(serializers.ModelSerializer):
 
             
         elif estado == 'realizada':
-            # Verifica que haya una visita programada para marcar como "Realizada"
-            if visitas_programadas.count() == 0:
-                raise ValidationError(f'No puedes marcar una visita de número {numero_visita} como "Realizada" si no hay visitas programadas previamente.')
+            # # Verifica que haya una visita programada para marcar como "Realizada"
+            # if visitas_programadas.count() == 0:
+            #     raise ValidationError(f'No puedes marcar una visita de número {numero_visita} como "Realizada" si no hay visitas programadas previamente.')
 
             # Verifica que no se exceda el límite de 3 visitas en total
             if visitas_programadas.count() + visitas_realizadas.count() >= 3:
