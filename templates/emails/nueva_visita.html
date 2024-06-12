@@ -1,0 +1,56 @@
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nueva Visita Programada</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+        }
+        .container {
+            background-color: #ffffff;
+            width: 100%;
+            margin: 20px auto;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        h1 {
+            color: #70B22D;
+        }
+        p {
+            color: #555555;
+            line-height: 1.6;
+        }
+        .button {
+            display: inline-block;
+            padding: 10px 20px;
+            margin-top: 20px;
+            font-size: 16px;
+            color: #ffffff;
+            background-color: #007BFF;
+            border-radius: 5px;
+            text-decoration: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Nueva Visita Programada</h1>
+        <p>Estimado/a <strong>{{ aprendiz.nombres }}  {{aprendiz.apellidos}} </strong></p>
+        <p>Se ha programado una nueva visita para usted.</p>
+        <p><strong>Fecha:</strong> {{ fecha_visita }}</p>
+        <p><strong>Hora:</strong> {{ hora_visita }}</p>
+        <p><strong>Lugar:</strong> {{ lugar }}</p>
+        <p><strong>Estado:</strong> {{ estado }}</p>
+        <p><strong>Tipo visita:</strong> {{ tipo_visita }}</p>
+        <p>Por favor, asegúrese de estar disponible en la fecha y hora programadas.</p>
+        <p>Saludos cordiales,</p>
+    </div>
+</body>
+</html>
