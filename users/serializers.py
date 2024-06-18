@@ -11,15 +11,19 @@ from dj_rest_auth.serializers import PasswordResetSerializer
 
 from .forms import CustomResetForm
 
+"""Serializador para el modelo de usuario"""
 class UserSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = get_user_model()
-        fields = ['rol','documento', 'password', 'name']
-        extra_kwargs = {'password': {'write_only':True}}
+        fields = ['rol','documento', 'password', 'name', 'must_change_password']
+        extra_kwargs = {'password': {'write_only':True}, 'must_change_password': {'read_only': True}}
 
     def create(self, validate_data):
-        return get_user_model().objects.create_user(**validate_data)
+        user = get_user_model().objects.create_user(**validate_data)
+        user.must_change_password = True
+        user.save()
+        return user
     
     def update(self, intance, validated_data):
         password = validated_data.pop('password', None)
@@ -27,10 +31,12 @@ class UserSerializer(serializers.ModelSerializer):
 
         if password:
             user.set_password(password)
+            user.must_change_password = False  
             user.save()
 
         return user
     
+"""Serializador para la validacion del token de autenticacion"""
 class AuthTokenSerializer(serializers.Serializer):
     rol = serializers.CharField()
     documento = serializers.CharField()
@@ -83,7 +89,7 @@ class AuthTokenSerializer(serializers.Serializer):
             user_profile_data = None
             return {"error": "No se encontró un perfil de instructor asociado."}
 
-        return  {'token': token.key, 'rol': rol, 'user_profile': user_profile_data}
+        return  {'token': token.key, 'rol': rol, 'user_profile': user_profile_data, 'must_change_password': user.must_change_password}
     
 
     def create(self, validated_data):
