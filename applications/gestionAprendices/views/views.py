@@ -85,7 +85,8 @@ class DocumentacionAprendizViewSet(viewsets.ModelViewSet):
 
         if aprendiz_id:
             queryset = queryset.filter(aprendiz= aprendiz_id)
-            return queryset
+        
+        return queryset
 
 
     
