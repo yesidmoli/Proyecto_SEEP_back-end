@@ -40,7 +40,7 @@ class Ficha(models.Model):
 
     numero_ficha = models.CharField(max_length=20 )
     nombre_programa = models.CharField(max_length=100)
-    nivel_formacion = models.CharField(max_length=50, choices=NIVEL_FORMACION_CHOICES)
+    nivel_formacion = models.CharField(max_length=50)
     horario_formacion = models.CharField(max_length=50, choices=HORARIO_FORMACION_CHOICES)
    
 
