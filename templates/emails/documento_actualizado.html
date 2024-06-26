@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Documento Actualizado</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+        }
+        .container {
+            width: 90%;
+            margin: auto;
+            background: white;
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        .header {
+            background-color: #04324D;
+            color: white;
+            padding: 10px 0;
+            text-align: center;
+            border-bottom: 5px solid #70B22D;
+        }
+        .content {
+            padding: 20px;
+        }
+        .footer {
+            text-align: center;
+            padding: 10px;
+            font-size: 12px;
+            color: #fff;
+            background-color: #04324D;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Documento Actualizado</h1>
+        </div>
+        <div class="content">
+            <p>Hola,</p>
+            <p>Se ha actualizado un documento para el aprendiz {{ nombre_aprendiz }}.</p>
+            <p><strong>Tipo de Documento:</strong> {{ tipo_documento }}</p>
+            <p><strong>Observaciones:</strong> {{ observaciones }}</p>
+            <p>Saludos,<br>SEEP</p>
+        </div>
+        <div class="footer">
+            <p>Este es un mensaje automático. Por favor, no responda a este correo.</p>
+        </div>
+    </div>
+</body>
+</html>
