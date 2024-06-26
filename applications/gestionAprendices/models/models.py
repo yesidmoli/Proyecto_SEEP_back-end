@@ -90,7 +90,7 @@ class Aprendiz(models.Model):
     
     # Otras características
     finalizacion_etapa_lectiva = models.DateField()
-    estado_aprobacion = models.CharField(max_length=50, choices=ESTADO_APROBACION_CHOICES, default="pendiente", blank=True)
+    estado_aprobacion = models.CharField(max_length=50, default="pendiente", blank=True)
     
     # Relación con la tabla Empresa (ForeignKey)
     empresa = models.ForeignKey('Empresa', on_delete=models.CASCADE)

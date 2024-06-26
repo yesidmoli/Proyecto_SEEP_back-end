@@ -19,6 +19,10 @@ from ..filters import AprendizFilter
 
 from rest_framework import generics,authentication,permissions
 
+from django.http import JsonResponse
+from django.views.decorators.csrf import csrf_exempt
+from django.db.models import Count
+
 class FichaListView(ListAPIView):
     queryset = Ficha.objects.all()
     serializer_class = FichaSerializer
@@ -148,4 +152,50 @@ class FormularioFinalView(viewsets.ModelViewSet):
     
     
 
-    
+#vista para obtener los aprendices con diferentes estados
+@csrf_exempt
+def aprendices_certificacion(request):
+    if request.method == 'GET':
+        try:
+            aprobados = Aprendiz.objects.filter(estado_aprobacion='aprobado').count()
+            pendientes = Aprendiz.objects.exclude(estado_aprobacion='pendiente').count()
+
+            data = {
+                'aprobados': aprobados,
+                'pendientes': pendientes,
+            }
+            return JsonResponse(data)
+        except Exception as e:
+            return JsonResponse({'error': str(e)}, status=500)
+    else:
+        return JsonResponse({'error': 'Método no permitido'}, status=405)
+   
+@csrf_exempt 
+
+def aprendices_certificacion_por_ficha(request):
+    if request.method == 'GET':
+        try:
+            # Obtener todas las fichas
+            todas_las_fichas = Ficha.objects.all()
+
+            # Obtener la cantidad de aprendices aprobados y pendientes por ficha
+            data = []
+            for ficha in todas_las_fichas:
+                aprobados = Aprendiz.objects.filter(ficha=ficha, estado_aprobacion='aprobado').count()
+                pendientes = Aprendiz.objects.filter(ficha=ficha).exclude(estado_aprobacion='aprobado').count()
+
+                ficha_data = {
+                    'numero_ficha': ficha.numero_ficha,
+                    'nombre_programa': ficha.nombre_programa,
+                    'nivel_formacion': ficha.nivel_formacion,
+                    'horario_formacion': ficha.horario_formacion,
+                    'aprobados': aprobados,
+                    'pendientes': pendientes,
+                }
+
+                data.append(ficha_data)
+
+            return JsonResponse({'fichas': data})
+
+        except Exception as e:
+            return JsonResponse({'error': str(e)}, status=500)
